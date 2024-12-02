@@ -9,6 +9,7 @@
         }
     ],
     "require": {
+        "php": "^8.2"
     },
     "require-dev":{
         "delboy1978uk/dev-tools": "^1.0.5"
