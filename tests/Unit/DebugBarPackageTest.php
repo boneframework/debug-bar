@@ -2,10 +2,11 @@
 
 namespace Tests\Bone\DebugBar;
 
+use Bone\Contracts\Container\ContainerInterface;
 use Bone\DebugBar\DebugBarPackage;
 use Codeception\Test\Unit;
 
-class BlankTest extends Unit
+class DebugBarPackageTest extends Unit
 {
     protected DebugBarPackage $debugBarPackage;
 
@@ -21,6 +22,8 @@ class BlankTest extends Unit
 
     public function testBlah()
     {
-        $this->assertEquals('Ready to start building tests', $this->debugBarPackage->blah());
+        $container = $this->createMock(ContainerInterface::class);
+        $container->expects($this->once())->method('addToContainer');
+        $this->debugBarPackage->addToContainer();
     }
 }

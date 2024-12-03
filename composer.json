@@ -9,10 +9,13 @@
         }
     ],
     "require": {
-        "php": "^8.2"
+        "php": "^8.2",
+        "maximebf/debugbar": "^1.23",
+        "boneframework/contracts": "^v1.0"
     },
     "require-dev":{
-        "delboy1978uk/dev-tools": "^1.0.5"
+        "delboy1978uk/dev-tools": "^1.0.5",
+        "delboy1978uk/barnacle": "^2.5"
     },
     "autoload":{
         "psr-4":{

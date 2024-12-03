@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Bone\DebugBar;
 
-class DebugBarPackage
+use Bone\Contracts\Container\ContainerInterface;
+use Bone\Contracts\Container\RegistrationInterface;
+
+class DebugBarPackage implements RegistrationInterface
 {
-    /**
-     * @return string
-     */
-    public function blah()
+    public function addToContainer(ContainerInterface $c): void
     {
-        return "Ready to start building tests";
+        $c[DebugBar::class] = new DebugBar();
     }
 }
