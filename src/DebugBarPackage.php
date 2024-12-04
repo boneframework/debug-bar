@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Bone\DebugBar;
 
 use Barnacle\Container;
+use Barnacle\RegistrationInterface;
 use Bone\Contracts\Container\ContainerInterface;
-use Bone\Contracts\Container\RegistrationInterface;
 use Bone\DebugBar\View\Extension\DebugBarExtension;
 use Bone\View\ViewEngineInterface;
 use Bone\View\ViewRegistrationInterface;
+use Del\Booty\AssetRegistrationInterface;
 
-class DebugBarPackage implements RegistrationInterface, ViewRegistrationInterface
+class DebugBarPackage implements RegistrationInterface, ViewRegistrationInterface, AssetRegistrationInterface
 {
     public function addToContainer(ContainerInterface $c): void
     {
@@ -29,5 +30,10 @@ class DebugBarPackage implements RegistrationInterface, ViewRegistrationInterfac
         $viewEngine = $c->get(ViewEngineInterface::class);
 
         return [new DebugBarExtension($viewEngine, $debugBar)];
+    }
+
+    public function getAssetFolders(): array
+    {
+        return ['debug-bar' => __DIR__ . '/../../../maximebf/debugbar/src/DebugBar/Resources'];
     }
 }
