@@ -9,6 +9,8 @@ use Barnacle\RegistrationInterface;
 use Bone\Contracts\Container\ContainerInterface;
 use Bone\DebugBar\View\Extension\DebugBarExtension;
 use Bone\View\ViewRegistrationInterface;
+use DebugBar\DataCollector\PDO\PDOCollector;
+use DebugBar\DataCollector\PDO\TraceablePDO;
 use Del\Booty\AssetRegistrationInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Slam\DbalDebugstackMiddleware\DebugStack;
@@ -23,7 +25,12 @@ class DebugBarPackage implements RegistrationInterface, ViewRegistrationInterfac
         /** @var EntityManagerInterface $entityManager */
         $entityManager = $c->get(EntityManagerInterface::class);
         $entityManager->getConfiguration()->setMiddlewares([$debugMiddleware]);
-        $c[DebugBar::class] = new DebugBar();
+        /** @var \PDO $connection */
+        $connection = $entityManager->getConnection()->getNativeConnection();
+        $pdo = new TraceablePDO($connection);
+        $debugBar = new DebugBar();
+        $debugBar->addCollector(new PDOCollector($pdo));
+        $c[DebugBar::class] = $debugBar;
     }
 
     public function addViews(): array
