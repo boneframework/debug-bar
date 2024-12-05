@@ -17,7 +17,6 @@ class DebugBarExtension implements ExtensionInterface
     public JavascriptRenderer $renderer;
 
     public function __construct(
-        private Engine $engine,
         private DebugBar $debugBar,
     ) {
         $this->renderer = $this->debugBar->getJavascriptRenderer('https://' . getenv('DOMAIN_NAME') . '/debug-bar');
