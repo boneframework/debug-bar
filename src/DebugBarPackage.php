@@ -47,6 +47,8 @@ class DebugBarPackage implements RegistrationInterface, ViewRegistrationInterfac
 
     public function getAssetFolders(): array
     {
-        return ['debug-bar' => __DIR__ . '/../../../maximebf/debugbar/src/DebugBar/Resources'];
+        return [
+            'debug-bar' => __DIR__ . '/../../../maximebf/debugbar/src/DebugBar/Resources',
+        ];
     }
 }

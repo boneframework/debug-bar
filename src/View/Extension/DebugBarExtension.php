@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Bone\DebugBar\View\Extension;
 
 use Bone\DebugBar\DebugBar;
+use Bone\DevTools\ReflectionInvoker;
 use DebugBar\JavascriptRenderer;
 use League\Plates\Engine;
 use League\Plates\Extension\ExtensionInterface;
@@ -13,13 +14,25 @@ use function getenv;
 
 class DebugBarExtension implements ExtensionInterface
 {
+    use ReflectionInvoker;
+
     public ?Template $template = null;
     public JavascriptRenderer $renderer;
+    public bool $isEnabled;
 
     public function __construct(
         private DebugBar $debugBar,
     ) {
-        $this->renderer = $this->debugBar->getJavascriptRenderer('https://' . getenv('DOMAIN_NAME') . '/debug-bar');
+        $isEnabled = \getenv('DEBUG_BAR');
+        $isEnabled = $isEnabled === 'true';
+        $this->isEnabled = $isEnabled ?? false;
+
+        if ($this->isEnabled) {
+            $baseUrl = 'https://' . getenv('DOMAIN_NAME');
+            $renderer = $this->renderer = $this->debugBar->getJavascriptRenderer($baseUrl . '/debug-bar');
+            $css = file_get_contents(__DIR__ . '/../../../assets/css/debugbar.css');
+            $renderer->addInlineAssets([$css],null, null);
+        }
     }
 
     public function register(Engine $engine)
@@ -30,12 +43,11 @@ class DebugBarExtension implements ExtensionInterface
 
     public function debugBarJs() : string
     {
-        $this->debugBar["messages"]->addMessage("hello world!");
-        return $this->renderer->renderHead();
+        return $this->isEnabled ? $this->renderer->renderHead() : '';
     }
 
     public function debugBarHtml() : string
     {
-        return $this->renderer->render();
+        return $this->isEnabled ? $this->renderer->render() : '';
     }
 }
