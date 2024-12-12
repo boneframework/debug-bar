@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "php": "^8.2",
+        "php": "^8.3",
         "ext-pdo": "*",
         "boneframework/contracts": "^v1.0",
         "delboy1978uk/bone-view": "^v1.8.1",
