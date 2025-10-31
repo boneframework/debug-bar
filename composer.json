@@ -39,6 +39,6 @@
         }
     },
     "scripts": {
-        "post-install-cmd": "Please add 'Bone\\DebugBar\\DebugBarPackage' to your 'config/packages.php"
+        "post-install-cmd": "echo 'Please add `Bone\\DebugBar\\DebugBarPackage` to your `config/packages.php`.'"
     }
 }
