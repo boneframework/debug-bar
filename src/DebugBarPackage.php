@@ -13,6 +13,7 @@ use DebugBar\DataCollector\PDO\PDOCollector;
 use DebugBar\DataCollector\PDO\TraceablePDO;
 use Del\Booty\AssetRegistrationInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use PDO;
 use Slam\DbalDebugstackMiddleware\DebugStack;
 use Slam\DbalDebugstackMiddleware\Middleware;
 
@@ -22,14 +23,23 @@ class DebugBarPackage implements RegistrationInterface, ViewRegistrationInterfac
     {
         $debugStack = new DebugStack();
         $debugMiddleware = new Middleware($debugStack);
-        /** @var EntityManagerInterface $entityManager */
-        $entityManager = $c->get(EntityManagerInterface::class);
-        $entityManager->getConfiguration()->setMiddlewares([$debugMiddleware]);
-        /** @var \PDO $connection */
-        $connection = $entityManager->getConnection()->getNativeConnection();
-        $pdo = new TraceablePDO($connection);
-        $debugBar = new DebugBar();
-        $debugBar->addCollector(new PDOCollector($pdo));
+        $pdo = null;
+
+        if ($c->has(EntityManagerInterface::class)) {
+            $entityManager = $c->get(EntityManagerInterface::class);
+            $entityManager->getConfiguration()->setMiddlewares([$debugMiddleware]);
+            $connection = $entityManager->getConnection()->getNativeConnection();
+            $pdo = new TraceablePDO($connection);
+        } elseif ($c->has(PDO::class)) {
+            $connection = $c->get(PDO::class);
+            $pdo = new TraceablePDO($connection);
+        }
+
+        if ($pdo) {
+            $debugBar = new DebugBar();
+            $debugBar->addCollector(new PDOCollector($pdo));
+        }
+
         $c[DebugBar::class] = $debugBar;
     }
 
